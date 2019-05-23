@@ -1,0 +1,405 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>mISAC - Microservice ISAC</title>
+
+    <link rel="stylesheet" href="css/reveal.css"/>
+    <!--<link rel="stylesheet" href="css/theme/black.css">-->
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="css/zenburn.css"/>
+
+    <!-- Docker theme -->
+    <link rel="stylesheet" href="css/theme/simple.css"/>
+    <link rel="stylesheet" href="css/theme/sky.css"/>
+
+    <script>
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <header></header>
+
+        <!-- slide 0 - title -->
+        <section data-state="slide0">
+            <img src="img/misac.png" />
+            <h4 style="color: #aaa">
+                (Microservice ISAC)
+            </h4>
+        </section>
+
+        <!-- slide 1 - TOC -->
+        <section data-state="slide1">
+            <style>.slide1 header:after {
+                content: "Obsah prezentace";
+            }</style>
+
+            <section class="al-left">
+                <ul>
+                    <li>SW architektura</li>
+                    <li>co je mISAC?</li>
+                    <li>použité technologie</li>
+                    <li>použité python knihovny</li>
+                    <li>mISAC moduly</li>
+                    <li>adresářová struktura aplikace</li>
+                    <li>cookiecutter</li>
+                    <li>build tools</li>
+                    <li>praktická ukázka</li>
+                </ul>
+            </section>
+        </section>
+
+        <!-- slide 2 - SW Architecture -->
+        <section data-state="slide2">
+            <style>.slide2 header:after {
+                content: "SW Architektura";
+            }</style>
+
+            <section>
+                # TODO: Domafin image
+            </section>
+
+            <section>
+                # TODO: mISAC architecture image
+
+                <aside class="notes">
+                </aside>
+            </section>
+        </section>
+
+        <!-- Protobuf - about -->
+        <section data-state="slide3">
+            <style>.slide3 header:after {
+                content: "Co je mISAC?";
+            }</style>
+
+            <section class="al-left">
+                <ul>
+                    <li>zkratka pro microsevice ISAC</li>
+                    <li>jednoduché a malé python aplikace</li>
+                    <li>složené z více malých balíčků</li>
+                    <li>základem misac.app (db, log, ....)</li>
+                    <li>cílem aplikace je dělat jednu věc a dělat ji dobře</li>
+                </ul>
+            </section>
+        </section>
+
+        <!-- slide 4 - used technologies -->
+        <section data-state="slide4" class="al-left">
+            <style>
+                .slide4 header:after,
+                .slide4-1 header:after {
+                    content: "Použité technologie";
+                }
+                .slide4-2 header:after {
+                    content: "Graylog"
+                }
+                .slide4-3 header:after {
+                    content: "Sentry"
+                }
+            </style>
+
+            <section data-state="slide4-1">
+                <ul>
+                    <li>Python</li>
+                    <li>Docker</li>
+                    <li>Protocol Buffers</li>
+                    <li>gRPC</li>
+                    <li>Graylog</li>
+                    <li>Sentry</li>
+                </ul>
+            </section>
+
+            <section data-state="slide4-2">
+                <ul>
+                    <li>centralizované řešení pro správu logů</li>
+                    <li>open source</li>
+                    <li>alternativa k ELK</li>
+                    <li>postaveno nad MongoDB a Elasticsearch</li>
+                    <li>nativní podpora gelf formátu v Dockeru</li>
+                </ul>
+            </section>
+
+            <section data-state="slide4-3">
+                <ul>
+                    <li>systém pro centralizované sledování chyb aplikace</li>
+                    <li>python, open source</li>
+                    <li>stejně důležité jako centralizovaný log</li>
+                    <li>zaznamená všechny neodchycené vyjímky</li>
+                </ul>
+            </section>
+        </section>
+
+        <!-- slide 5 - used python libs -->
+        <section data-state="slide5">
+            <style>.slide5 header:after {
+                content: "Použité Python knihovny";
+            }</style>
+
+            <section class="al-left">
+                <h4>Dynaconf</h4>
+                <ul>
+                    <li>konfigurační systém pro Python aplikace</li>
+                    <li>podpora několika formátů souborů (.toml, .yaml, .ini, ...) a environment proměnných</li>
+                    <li>rozšíření pro Django a Flask</li>
+                </ul>
+
+                <br />
+                <br />
+
+                <h4>Injector</h4>
+                <ul>
+                    <li>knihovna pro podporu Dependency Injection</li>
+                </ul>
+
+                <br />
+                <br />
+
+                <h4>SQLAlchemy</h4>
+                <h4>Sentry SDK</h4>
+            </section>
+        </section>
+
+        <!-- slide 6 - mISAC packages -->
+        <section data-state="slide6">
+            <style>.slide6 header:after {
+                content: "mISAC moduly";
+            }</style>
+
+            <section class="al-left">
+                <h4>misac.app</h4>
+                <ul>
+                    <li>základ každé mISAC aplikace</li>
+                    <li>řeší inicializaci configu, injectoru, db a loggeru</li>
+                    <li>inicializace probíhá s využitím lazy loadingu</li>
+                </ul>
+            </section>
+
+            <section class="al-left">
+                <h4>misac.db</h4>
+                <ul>
+                    <li>velice jednoduchý - 1 funkce</li>
+                    <li>pomocná funkce pro vytvoření připojení podle parametrů s konfiguračních souborů</li>
+                </ul>
+
+                <br />
+                <br />
+
+                <h4>misac.log</h4>
+                <ul>
+                    <li>obsahuje třídu pro formátování do JSON formátu, který je použit ve spojení s graylogem</li>
+                </ul>
+            </section>
+        </section>
+
+        <!-- slide 7 - gRPC -->
+        <section data-state="slide7">
+            <style>.slide7 header:after {
+                content: "Adresářová struktura";
+            }</style>
+
+            <br />
+            <pre class="stretch"><code data-trim data-noescape>
+example-app/
+├── .gitlab
+├── bin
+├── docker
+├── docs
+|   ├── build
+│   └── source
+├── example_app
+│   ├── conf
+│   ├── entities
+│   ├── libs
+│   ├── repositories
+│   ├── services
+│   └── server.py
+├── protos
+├── stubs
+├── tests
+├── .dockerignore
+├── .gitignore
+├── .prospector.yaml
+├── docker-compose-build.yml
+├── docker-compose-dev.yml
+├── docker-compose.yml
+├── Dockerfile
+├── Dockerfile.build_tools
+├── mypy.ini
+├── README.md
+├── requirements.txt
+└── VERSION.md
+            </code></pre>
+        </section>
+
+        <section data-state="slide8">
+            <style>.slide8 header:after {
+                content: "Cookiecutter";
+            }</style>
+
+            <section class="al-left">
+                <ul>
+                    <li>nástroj pro rychlé vytváření projektů</li>
+                    <li>nápsáno v Pythonu</li>
+                    <li>nové projekty jsou vytvářeny pomocí šablon</li>
+                    <li>pre / post hooks</li>
+                </ul>
+            </section>
+        </section>
+
+        <section data-state="slide9">
+            <style>
+                .slide9 header:after {
+                    content: "Build Tools";
+                }
+            </style>
+
+            <section class="al-left">
+                <ul>
+                    <li>skupina docker služeb</li>
+                    <li>spouštěno v CI / CD</li>
+                    <li>zajištění lepší kvality kódu</li>
+                </ul>
+            </section>
+
+            <section class="al-left">
+                <h4>docs-gen</h4>
+                <ul>
+                    <li>automatické generování dokumentace</li>
+                    <li>používá Sphinx</li>
+                    <li>dokumentace generována ze zdrojového kódu aplikace</li>
+                </ul>
+
+                <br />
+                <br />
+
+                <h4>testy</h4>
+                <ul>
+                    <li>automatické spouštění testů</li>
+                    <li>využívá Python knihovnu pytest</li>
+                    <li>každá nová funkcionalita by měla mít test</li>
+                </ul>
+            </section>
+
+            <section class="al-left">
+                <h4>type-checker</h4>
+                <ul>
+                    <li>kontrola statického typování</li>
+                    <li>používá knihovnu mypy</li>
+                </ul>
+
+                <br />
+                <br />
+
+                <h4>prospector</h4>
+                <ul>
+                    <li>nástroj na analýzu kódu</li>
+                    <li>využívá pep8, pep257, pylint, McCabe complexity</li>
+                    <li>doplňek k mypy</li>
+                </ul>
+
+            </section>
+            <section class="al-left">
+                <h4>bandit</h4>
+                <ul>
+                    <li>nástroj pro hledání bezpečnostních chyb v Python kódu - TODO</li>
+                </ul>
+            </section>
+        </section>
+
+        <section data-state="slide10">
+            <h3>DEMO TIME</h3>
+        </section>
+
+        <section data-state="slide11">
+            <style>
+                .slide11 header:after {
+                    content: "Odkazy";
+                }
+            </style>
+
+            <script type="text/javascript">
+                var links = [
+                    {
+                        'di-pattern': 'Dependency Injection Pattern|https://en.wikipedia.org/wiki/Dependency_injection',
+                        'docker-com-log-drivers': 'Docker Log Drivers|https://docs.docker.com/v17.12/config/containers/logging/configure/#supported-logging-drivers',
+                        'graylog': 'Graylog|https://www.graylog.org/products/open-source',
+                        'grpc-io': 'gRPC.io|https://grpc.io/',
+                        'pep8': 'PEP 8|https://www.python.org/dev/peps/pep-0008/',
+                        'pep8-stylized': 'PEP 8 Stylized|https://pep8.org/',
+                        'protobufs': 'Protocol Buffers|https://developers.google.com/protocol-buffers/docs/proto3'
+                    },
+                    {
+                        'python-dynaconf': 'Dynaconf|https://dynaconf.readthedocs.io/en/latest/index.html',
+                        'python-injector': 'Injector|https://injector.readthedocs.io/en/latest/index.html',
+                        'python-mccabe': 'McCabe|https://pypi.org/project/mccabe/',
+                        'python-mypy': 'Mypy|http://mypy-lang.org/',
+                        'python-pep8': 'pep8|https://pep8.readthedocs.io/en/latest/',
+                        'python-pylint': 'Pylint|https://www.pylint.org/',
+                        'python-pytest': 'Pytest|https://docs.pytest.org/en/latest/',
+                        'python-sentry': 'Sentry SDK|https://github.com/getsentry/sentry-python',
+                        'python-sphinx': 'Sphinx - autodoc|http://www.sphinx-doc.org/en/master/',
+                        'python-sqlalchemy': 'SQLAlchemy|https://www.sqlalchemy.org/'
+                    },
+                    {
+                        'rst': 'reStructuredText|http://docutils.sourceforge.net/rst.html',
+                        'semver': 'Semantic Versioning|https://semver.org/',
+                        'sentry-io': 'Sentry|https://sentry.io/',
+                        '': '',
+                        'docker-misac-base': 'mISAC base docker image|https://gitlab.allrisk.cz/dockers/base_images/tree/master/python/misac',
+                        'docker-base-images': 'Docker base images|https://gitlab.allrisk.cz/dockers/base_images',
+                        'misac-packages': 'mISAC packages|https://gitlab.allrisk.cz/python/misac/packages'
+                    }
+                ];
+
+                for (var i = 0; i < links.length; i++) {
+                    document.write('<section class="al-left" data-state="slide11-' + i +'"><ul>');
+                    var link = null;
+                    for (var k in links[i]) {
+                        if (k) {
+                            link = links[i][k].split('|');
+                            document.write('<li><a href="' + link[1] + '" target="_blank">' + link[0] + '</a></li>');
+                        }
+                        else
+                            document.write('</ul><br/><br/><ul>');
+                    }
+                    document.write('</ul></section>');
+                }
+            </script>
+        </section>
+    </div>
+</div>
+
+<script src="js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        dependencies: [
+            // { src: 'plugin/markdown/marked.js' },
+            // { src: 'plugin/markdown/markdown.js' },
+            {src: 'js/plugin/notes/notes.js', async: true},
+            {src: 'js/plugin/zoom-js/zoom.js', async: true},
+            {
+                src: 'js/plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            }
+        ],
+        history: true
+    });
+</script>
+</body>
+</html>
